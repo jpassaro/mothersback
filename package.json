@@ -1,0 +1,22 @@
+{
+  "name": "mothersback",
+  "version": "0.0.1",
+  "description": "Finding paths through a planar graph",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Passaro",
+  "license": "GPL-3.0",
+  "directories": {
+    "doc": "doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpassaro/mothersback.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jpassaro/mothersback/issues"
+  },
+  "homepage": "https://github.com/jpassaro/mothersback#readme"
+}
