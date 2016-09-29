@@ -1,6 +1,7 @@
 # Mothersback
 
-A JS library defining paths through planar graphs.
+A Javascript library for defining, finding, and illustrating paths
+through planar arrangements.
 
 ## What?
 
@@ -151,3 +152,10 @@ or edges cross each other as a result, the "planar arrangement" is
 unaffected. Does that fit for my "order of edges" definition above? Who
 knows! I'd love to find out in a future exploration: either prove the
 equivalence or explore a counterexample.
+
+[![Travis build status](http://img.shields.io/travis/jpassaro/mothersback.svg?style=flat)](https://travis-ci.org/jpassaro/mothersback)
+[![Code Climate](https://codeclimate.com/github/jpassaro/mothersback/badges/gpa.svg)](https://codeclimate.com/github/jpassaro/mothersback)
+[![Test Coverage](https://codeclimate.com/github/jpassaro/mothersback/badges/coverage.svg)](https://codeclimate.com/github/jpassaro/mothersback)
+[![Dependency Status](https://david-dm.org/jpassaro/mothersback.svg)](https://david-dm.org/jpassaro/mothersback)
+[![devDependency Status](https://david-dm.org/jpassaro/mothersback/dev-status.svg)](https://david-dm.org/jpassaro/mothersback#info=devDependencies)
+doc/intention.md
