@@ -18,24 +18,31 @@ function generateFaces(canvas){
     })())]
 }
 
-function nextInFace(canvas, a, b){
-    let neighbors = [...canvas.edgeFunction(a)];
+function nextInFace(canvas, now, last){
+    let neighbors = [...canvas.edgeFunction(now)];
     if (neighbors.length < 2){
         throw canvas.RestrictiveAssumption('no nodes with just one neighbor');
     }
-    let idx = neighbors.indexOf(b);
+    let idx = neighbors.indexOf(last);
     let result = neighbors[(idx + 1) % neighbors.length];
+    console.log(`nextInFace(now=${now}, last=${last}): nbrs=${neighbors}, idx=${idx}, next=${result}`);
     return result;
 }
 
-function makeFace(canvas, a, b){
-    let face = [a, b];
+function makeFace(canvas, start, second){
+    console.log(`makeFace(${start}, ${second})`);
+    let last = start;
+    let now = second;
+    let face = [last, now];
     let next;
-    while ( (next = nextInFace(canvas, a, b)) != face[0] ){
+    while (
+        (next = nextInFace(canvas, now, last)) != face[0] 
+    ){
         face.push(next);
-        a = b;
-        b = next;
+        last = now;
+        now = next;
     }
+    console.log(`make_face() = ${face}`);
     return face;
 }
 
