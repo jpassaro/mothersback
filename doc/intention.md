@@ -62,13 +62,14 @@ Third--
 We will define the basic functionality at an extremely high level. This
 is essentially a graph theory problem: beyond the definition of a
 loopless (for now) and undirected graph, only a small amount of
-additional structure[*](#addl-structure) is needed to define the planar
-arrangement we'll be playing with. In principle, the graph nodes may be
-just about anything.
+[additional structure](#addl-structure) is needed to define the planar
+arrangement we'll be playing with.
 
-For the pretty visuals we have in mind, they'll probably be SVG objects.
-As such, we should be able to build some utilities for using arbitrary
-X/Y points, and in particular SVG points or something similar.
+In principle, we're not picky about what the graph nodes are. In testing
+and abstract buliding, they will be integers. For the pretty visuals we
+have in mind, they'll probably be SVG objects. We should be able to
+build some utilities for arbitrary X/Y points in the cartesian plane,
+which we could then exploit with SVG points or something similar.
 
 ### API sketch
 
@@ -84,6 +85,7 @@ point and a direction. By traverse I mean something like this:
     canvas = new Canvas(points, edges); // calculates faces
 
     function visit(component, previous, next){
+      // application's custom visit function
       function innerprint(c, prefix){
          if (c){
             console.log(`${prefix} I visit ${c.obj} of type ${c.type}`);
@@ -93,6 +95,7 @@ point and a direction. By traverse I mean something like this:
       innerprint(previous, 'last time');
       innerprint(next, 'next time');
       console.log('/////////')
+      animate(component);
     }
     var start = points[0];
     var second = edges[0];
@@ -134,20 +137,50 @@ datum gathered from it, e.g. the length before it repeated itself.
 1. Come up with a few illustrative examples for the intro document
 1. Write the intro document
 
-#### <a name="addl-structure">\*A quick note about the graph structure</a>
-Above I mentioned the additional structure required on top of an
-undirected loopless graph to make this work. For the library I'm using
-this: given a node, there is some looped ordering of the edges on that
-node, such that each edge has a unique "successor" edge with respect to
-the node, and also is the successor to some unique "predecessor" edge on
-that node. In terms of the real plane, you get this exactly by passing a
-radius around the point and naming the edges you pass in clockwise
-order.
+#### <a name="addl-structure">Additional graph structure</a>
 
-What I really want is some representation that is preserved through
+We impose additional structure or requirements alongside the usual
+definition of an undirected loopless graph:
+
+> For each node, there is some "looped" ordering of the edges on that
+> node, such that each edge has a unique "successor" edge with respect
+> to the node, and also is the successor to some unique "predecessor"
+> edge on that node.
+
+In terms of the real plane, you get this exactly by passing a radius
+counter-clockwise around the point and naming the edges you pass in
+order. The "looped" order is to indicate the structure doesn't really
+care where the radius starts, only in the information that when it hits
+edge A, the next edge it will hit is edge B and the previous one is edge
+Z.
+
+# Questions for later
+
+The structure I'm thinking of includes distinct faces, so I feel like
+just having a planar graph isn't enough. Is that true? What does
+standard graph theory have to tell me about faces? Can I find a planar
+graph that lends itself to two incompatible versions of my "planar
+arrangement"? (My guess for now is yes.)
+
+Assuming no, the other thing I want is that when modeled in Euclidean
+space, the structure is preserved through (a reasonable subset of)
 homotopy transformations of the plane: i.e. if you drag one of the
 points a little bit or bend an edge just slightly, as long as no points
 or edges cross each other as a result, the "planar arrangement" is
-unaffected. Does that fit for my "order of edges" definition above? Who
-knows! I'd love to find out in a future exploration: either prove the
-equivalence or explore a counterexample.
+unaffected.  At this point I think this "order of edges" system is a
+minimal and complete description of such an arrangement: is it in fact?
+I'd love to find out in a future exploration: formally write up the
+definition or criterion of the "planar arrangement" and either prove the
+order-of-edges structure is equivalent or create and explore a
+counterexample.
+
+Another question to consider, as I define the tetrahedron according to
+edge-order and find the vertex order has an interesting pattern that I
+don't fully understand yet. Does any "canvas" actually yield a
+"sensible" structure? (Tangent but important: what does "sensible" mean?
+I guess one important question is does it yield well-defined faces,
+edges, face-edge-vertex path dynamics.) I suspect the answer is no --
+obvious example to explore is based on the tetrahedron after switching
+exactly one vertex ordering. What conditions are sufficient to guarantee
+a "sensible" structure? Would this or any other example be unmodelable
+in R^3 but modelable in R^4?

@@ -15,9 +15,11 @@ import generateFaces from './generateFaces';
  *
  * A useful model can be seen in R^2. If we have "edges" as
  * line-segments in R^2, the result from this function would be the
- * points connected to this point by a segment, given in clockwise
- * order. It doesn't really matter in that case where you started as
- * long as the order is consistent.
+ * points connected to this point by a segment, given in counter
+ * clockwise order. (It doesn't really matter in that case where you
+ * started as long as the order is consistent; we use counter-clockwise
+ * for ordering vertex neighbors, since that direction corresponds to
+ * the ordering given by atan2(y1-y0, x1-x0).)
  *
  * This is enough information first to determine the faces, and second
  * to create the definition of a path through the canvas that is the
@@ -64,7 +66,9 @@ Canvas.prototype.edgeHasFace = function(edge) {
 
 Canvas.prototype.storeFaceForEdge = function(edge, face) {
     if (this.edgeHasFace(edge)){
-        throw this.RestrictiveError('attempt to assign face to edge twice');
+        throw this.RestrictiveAssumption(
+            'attempt to assign face to edge twice'
+        );
     }
     return this.edgeToFaceMap.set(this.edgeToString(edge), face);
 }

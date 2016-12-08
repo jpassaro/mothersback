@@ -12,7 +12,7 @@ import Canvas from '../../util/core/canvas';
  */
 function compareArray(a, b){
     if (b.length < a.length){ return - compareArray(b,a); }
-    console.log('compareArray') ; console.log(a);
+    // console.log('compareArray') ; console.log(a);
     return a.map((_, i)=>(b[i]-a[i])).reduce((prev, curr) => {prev || curr || 0;});
 }
 
@@ -29,9 +29,9 @@ function reorderCycle(arr) {
 }
 
 function sortArrayOfArrays(arr, reorder) {
-    console.log('sortArrayOfArrays'); console.log(arr);
+    // console.log('sortArrayOfArrays'); console.log(arr);
     arr = arr.map(reorderCycle);
-    console.log('sortArrayOfArrays2'); console.log(arr);
+    // console.log('sortArrayOfArrays2'); console.log(arr);
     arr.sort(compareArray);
     return arr;
 }
@@ -54,7 +54,7 @@ describe("Canvas", function() {
             this.cPoints = [...this.canvas.listPoints()];
             this.cEdges = [...this.canvas.listEdges()];
             let faces = [...this.canvas.listFaces()];
-            //console.log('generate [faces]'); console.log(faces);
+            // console.log('generate [faces]'); console.log(faces);
             this.cFaces = sortArrayOfArrays(faces, true);
 
             [this.cPoints, this.cEdges, this.cFaces].forEach(
@@ -70,12 +70,14 @@ describe("Canvas", function() {
         };
     });
     describe("Triangle", function() {
+        // a truly trivial case...
         beforeEach(function() { this.generatePolygon(3); });
         testUnique();
         it('has three points', function() {
             expect(this.points).toEqual([0, 1, 2]);
         });
         it('has three edges', function() {
+            // each listed twice, forwards and backwards
             expect(this.cEdges).toEqual([
                 [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1]
             ]);
@@ -83,7 +85,7 @@ describe("Canvas", function() {
         it('has "one" face', function() {
             // in fact it is two... one the bottom and one the top,
             // so to speak.
-            console.log([...this.canvas.listFaces()]);
+            // console.log([...this.canvas.listFaces()]);
             expect(this.cFaces).toEqual([ [0, 1, 2], [0, 2, 1] ]);
         });
     });
