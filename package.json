@@ -4,7 +4,7 @@
   "description": "Finding paths through a planar graph",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "author": "John Passaro",
   "license": "GPL-3.0",
@@ -18,5 +18,15 @@
   "bugs": {
     "url": "https://github.com/jpassaro/mothersback/issues"
   },
-  "homepage": "https://github.com/jpassaro/mothersback#readme"
+  "homepage": "https://github.com/jpassaro/mothersback#readme",
+  "dependencies": {
+    "jasmine-collection-matchers": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-register": "^6.16.3",
+    "eslint": "^3.8.1",
+    "eslint-plugin-jasmine": "^1.8.1"
+  }
 }
