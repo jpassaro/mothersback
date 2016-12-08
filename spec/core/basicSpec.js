@@ -89,4 +89,52 @@ describe("Canvas", function() {
             expect(this.cFaces).toEqual([ [0, 1, 2], [0, 2, 1] ]);
         });
     });
+    describe("Tetrahedron", function() {
+        /* tetrahedron in ASCII art:
+         *     1
+         *   / | \
+         *  /  |  \
+         * |   0   |
+         * | /   \ |
+         * 3 ----- 2
+         */
+        beforeEach(function() {
+            this.points = Array.apply(null, Array(4)).map((x, i) => (i));
+            this.edgeFunction = (i) => {
+                switch(i) {
+                    case 0:
+                        // Let's count them counter clockwise
+                        return [1, 3, 2];
+                    case 1:
+                        // Picture turning the object so 1 is in the middle
+                        return [0, 2, 3];
+                    case 2:
+                        // likewise
+                        return [0, 3, 1];
+                    case 3:
+                        return [0, 1, 2];
+                    default:
+                        throw Canvas.RestrictiveAssumption(`do not put ${i} in tetrahedron edge function`);
+                }
+            };
+            this.generate();
+        });
+        it('has four points', function() {
+            expect(this.points).toEqual([0, 1, 2, 3]);
+        });
+        it('has six edges', function() {
+            expect(this.cEdges).toEqual([
+                [0, 1], [0, 2], [0, 3], [1, 0], [1, 2], [1, 3],
+                [2, 0], [2, 1], [2, 3], [3, 0], [3, 1], [3, 2]
+            ]);
+        });
+        it('has four faces', function() {
+            // the faces we must count clockwise, the opposite of the
+            // edge order
+            expect(this.cFaces).toEqual([
+                [0, 1, 2], [0, 3, 1], [0, 2, 3], [1, 3, 2]
+            ]);
+        });
+
+    });
 });
