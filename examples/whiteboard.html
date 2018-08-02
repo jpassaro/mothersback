@@ -1,13 +1,24 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
-        <script type="text/javascript" src="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraphcore.js"></script>
     </head>
     <body>
-        <div id="box" class="jsxbox" style="width:400px; height:400px;"></div>
+        <canvas id="canvas">this should be a canvas, update your browser</canvas>
         <script type="text/javascript">
-            var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-2, 4, 6, -4], axis:true, grid:true});
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'green';
+            ctx.fillRect(10, 10, 10, 100);
         </script>
+        <ul>
+            <li><del>basic canvas</del></li>
+            <li>draw points</li>
+            <li>move points</li>
+            <li>draw lines</li>
+            <li>move lines with points</li>
+            <li>identify face+edge or vertex+edge or vertex+face for a path</li>
+            <li>highlight path pieces in sequence</li>
+        </ul>
 
     </body>
 </html>
