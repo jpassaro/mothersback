@@ -36,11 +36,12 @@ a few questions and patterns raised by this system that could be the
 focus of follow-up documents after the first one is complete.
 
 For example, considering a tesselation of the plane could be fascinating.
-Given a tesselation, are any paths truly bounded (i.e.
-cross the same point in the same fashion twice)? Consider how equivalent
-paths might be identified by the tesselation's own internal symmetry:
-are there a finite number of equivalence classes? (I sure think so!) Are
-any or all of these equivalence classes themselves finite?
+Suppose there is a graph embedded in the plane and some isometry group on the
+plane under which the graph is fixed (i.e. a tesselation). There is a finite
+number of distinct paths modulo isometry; how many? How many of the equivalence
+classes of paths contain a finite number of members? If an equivalence class is
+infinite, under what circumstances are its members finite in length (i.e. repeat
+themselves not only under isometry but in the original unbounded plane)?
 
 ### Why'd you choose such a weird name?
 
@@ -54,9 +55,8 @@ dangerous for your mother's back. I make no guarantees: play at your
 
 Third--
 
-#### Let's be real: did you want the name to rhyme with Mothersbaugh?
-[That dude](https://en.wikipedia.org/wiki/Mark_Mothersbaugh) is really cool. I
-shall offer no apology.
+#### Did you want the name to rhyme with Mothersbaugh?
+[That dude](https://en.wikipedia.org/wiki/Mark_Mothersbaugh) is really cool.
 
 ## Tech stuff
 
@@ -66,11 +66,9 @@ loopless (for now) and undirected graph, only a small amount of
 [additional structure](#addl-structure) is needed to define the planar
 arrangement we'll be playing with.
 
-In principle, we're not picky about what the graph nodes are. In testing
+In principle, we're not picky about what the graph vertices are. In testing
 and abstract buliding, they will be integers. For the pretty visuals we
-have in mind, they'll probably be SVG objects. We should be able to
-build some utilities for arbitrary X/Y points in the cartesian plane,
-which we could then exploit with SVG points or something similar.
+have in mind, they'll probably be SVG or Canvas objects.
 
 ### API sketch
 
@@ -81,9 +79,7 @@ information about points and edges to define a set of faces. That being
 done, the main thing we'll do is traverse this graph, given a starting
 point and a direction. By traverse I mean something like this:
 
-    var points = ...;
-    var edges = ...;
-    canvas = new Canvas(points, edges); // calculates faces
+    canvas = new MBCanvas({points: ..., edges: ...}); // calculates faces
 
     function visit(component, previous, next){
       // application's custom visit function
@@ -98,14 +94,14 @@ point and a direction. By traverse I mean something like this:
       console.log('/////////')
       animate(component);
     }
-    var start = points[0];
-    var second = edges[0];
+    var start = canvas.points[0];
+    var second = canvas.edges[0];
     canvas.traverse(first, second, visit);
 
 Let's demonstrate with an extremely easy example: say that
-`points === [0, 1, 2]` and that the `edges` describe a triangle in which
-`edges[0]` links `0` to `1` (nondirectionally). In that case, we should
-see the following:
+`points.length === 3` and that the `edges` describe a triangle in which
+`edges[0]` links `points[0]` to `points[1]` (nondirectionally). In that case,
+we should see the following:
 
     now I visit 0 of type POINT
     next time I visit EDGE[0, 1] of type EDGE
@@ -130,7 +126,10 @@ datum gathered from it, e.g. the length before it repeated itself.
 
 ### Technical To-Do list
 1. Get closer to a formal API for the abstract version
-1. Write super simple tests: Triangle/square; two-polygon arrangements
+1. Write super simple tests: Triangle/square; two-polygon arrangements;
+   tetrahedron.
+1. write more complicated tests. draw from real life patterns i've encountered;
+   also try K5 and K3,3 on mobius strip or on torus.
 1. Rough implementation
 1. Expand to more complicated tests / arrangements
 1. Create svg / visual / browser utilities
@@ -140,17 +139,23 @@ datum gathered from it, e.g. the length before it repeated itself.
 
 #### <a name="addl-structure">Additional graph structure</a>
 
-We impose additional structure or requirements alongside the usual
-definition of an undirected loopless graph.
+We start with the usual definition of a loopless undirected graph: namely a set
+`V` of vertices, and a set `E` of edges, which are labeled cardinality-2 subsets
+of `V` (i.e. unordered pairs of vertices). (The labeling is because in principle we
+could have more than one edge connecting the same pair of vertices.)
 
-> A "canvas" consists of a set of nodes and, for each node,
-> a finite sequence of neighboring nodes or edges on that
-> node: each edge has a unique "successor" edge with respect
-> to the node, and also is the successor to some unique "predecessor"
-> edge on that node.
+To form our "canvas", we add for each vertex a cyclic ordering of the edges
+adjacent to each vertex:
+
+> A canvas consists of a set of vertices, a set of edges, and, for each vertex,
+> a finite sequence of edges on that vertex: each edge has a unique "successor"
+> edge with respect to the vertex, and also is the successor to some unique
+> "predecessor" edge on that vertex. Which edge comes first for a given vertex
+> has no impact on the canvas as long as the cyclic order (the
+> successor/predecessor relation) remains constant.
 
 Following from successor to successor results in visiting every edge on the
-given node.
+given vertex.
 
 The easiest way to visualize this is in the familiar 2D cartesian plane: given
 a point, you get the ordering by passing a radius counter-clockwise around the
@@ -160,71 +165,38 @@ edge B and the previous one is edge Z. (Of course this can also be done with a
 clockwise motion, as long as the same one is used for all vertices in a given
 canvas.)
 
+After determining most of the above, I sought out [Bohan and
+Thomassen](#citations), which confirmed that this system is a sufficient
+combinatorial representation of the systems I want to model. They also provide
+an interesting extension that we will probably incorporate, a "sign" function
+on edges that allows for nonorientable embeddings:
+
+> A canvas includes a boolean flag for each edge, indicating whether or not
+> orientation "flips" when traversing that edge.
+
+In that case the procedure for finding faces is slightly more complicated: when
+an odd number of flipping edges have been traversed, from a vertex you
+proceed to the predecessor rather than the successor. Hopefully this will be
+easier to demonstrate when a visual example can be drawn.
+
+For example, with a graph embedded on a M&ouml;bius strip, we would want to
+arrange it such that a segment of the strip appears to be flat and contains all
+of the vertices; we'd take clockwise or counterclockwise sequences of edges
+from that, and label edges as "flipping" based on whether they pass over the
+"non-flat" part of the strip an odd number of times. Equivalently, you make a
+cut in the M&ouml;bius strip that does not intersect any vertex; form a regular
+flat strip, take orderings in the regular planar fashion, and label as
+"flipping" those edges that pass over the cut an odd number of times.
+
 # Questions for later
 
-The structure I'm thinking of includes distinct faces, meaning the graph must
-be [embedded](https://en.wikipedia.org/wiki/Graph_embedding), whether on a
-cartesian plane (equivalently a sphere) or something more complicated like a
-torus ([example](http://mathworld.wolfram.com/UtilityGraph.html)). Regardless
-of which figure the graph is embedded in, Mothersback needs to be able to
-identify the "faces" on it: the order of vertices / edges, which faces are
-adjacent via a given edge or vertex. Does the ordered-edge description meet
-that requirement? What does standard graph theory have to tell me about faces?
-Can I find a graph that lends itself to two incompatible versions of my canvas?
-
-Assuming no, the other thing I want is that when embedded in a 2-dimensional
-figure, the structure is preserved through (a reasonable subset of) homotopy
-transformations: i.e. if you drag one of the points a little bit or bend an
-edge just slightly, as long as no points or edges cross each other as a result,
-the canvas structure is unaffected.  At this time I think this "order of edges"
-system is a minimal and complete description of such an arrangement. Is it in
-fact? I'm pretty convinced by now that by "canvas" I'm aiming for a description
-of edges and faces on a graph embedded in a 2D surface; perhaps I can prove
-that the edge-order structure is isomorphic, or create and explore a
-counterexample.
-
-Another question to consider: as I define the tetrahedron according to edge
-order, a strict vertex order rule appears. If I draw it like this:
-
-```
-    1
-   /|\
-  / | \
- /  0  \
-| /   \ |
-2-------3
-```
-
-Listing neighbors counterclockwise, we get this:
-
-```
-0: 1, 2, 3
-1: 0, 3, 2
-2: 0, 1, 3
-3: 0, 2, 1
-```
-
-What if I swap two of the neighbors for one of the vertices, or two of them?
-(Since that amounts to reversing the neighbor list, doing three is equivalent
-to doing one, and doing all four is equivalent to the original.) So far, I
-think the single-switch version cannot be drawn on the plane but can be drawn
-on a torus. I have not managed to draw the double-switch version on the torus,
-but I suspect it can be drawn on a surface of genus 2.
-
-(If I do the same for a triangle (count one vertex's neighbors in reverse), there
-is no effect: each neighbor list has length two, and since they are equivalent
-up to cycles, switching them has no effect.)
-
-More broadly, what are the properties of a canvas that corresponds to an
-embedding of a graph? Is it possible to construct a graph embedding given any
-"canvas"?  If not, what constitutes an embeddable canvas? What characterizes
-canvases that can be drawn on a plane, versus those that require a torus, or
-that require a different surface altogether?
-
-What role does orientability play in this? Does the vertex-orders scheme rule
-out creating a canvas from graphs drawn on non-orientable surfaces such as the
-M&ouml;bius strip? (The utility graph can be so drawn, see the Wolfram link.)
+There's a finite number of distinct (up to automorphism) embeddings of, say,
+K4 (tetrahedron). I imagine this finite number is rather small. What is it?
+What is each embedding's orientability and genus?
 
 Potentially useful examples:
 * [A torus made using D3](https://toucano.uk/#gallery-torus)
 * [A visualization of graph embeddings](http://demonstrations.wolfram.com/EmbeddingsOfGraphsInATorusAndInAMoebiusStrip/)
+
+<a name="citations">Citations</a>:
+* [Graphs on Surfaces](https://www.fmf.uni-lj.si/~mohar/Book.html), Mohar and Thomassen.

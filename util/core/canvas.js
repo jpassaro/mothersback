@@ -1,7 +1,7 @@
 import generateFaces from './generateFaces';
 
 /**
- * Canvas
+ * MBCanvas
  *
  * An extremely abstract representation of a layout of points and edges
  * between them. The edges are specified via a function which takes one
@@ -32,9 +32,9 @@ import generateFaces from './generateFaces';
  * @param edgeFunction
  *     function which takes exactly one point and returns a list of
  *     neighbors, consistently-ordered as described above. Note that its
- *     `this` context will always be the Canvas it has been passed into.
+ *     `this` context will always be the MBCanvas it has been passed into.
  */
-function Canvas(points, edgeFunction) {
+function MBCanvas(points, edgeFunction) {
     this._points = [...points];
     this.edgeFunction = edgeFunction;
     this._edges = this._points.map((x) => {
@@ -45,26 +45,26 @@ function Canvas(points, edgeFunction) {
     this._faces = generateFaces(this);
 }
 
-Canvas.prototype.listPoints = function*() {
+MBCanvas.prototype.listPoints = function*() {
     yield* this._points;
 };
 
-Canvas.prototype.listEdges = function*() {
+MBCanvas.prototype.listEdges = function*() {
     yield* this._edges;
 };
 
-Canvas.prototype.listFaces = function*() {
+MBCanvas.prototype.listFaces = function*() {
     yield* this._faces;
 };
 
 // decent candidate for overriding
-Canvas.prototype.edgeToString = (edge) => { return edge.toString(); }
+MBCanvas.prototype.edgeToString = (edge) => { return edge.toString(); }
 
-Canvas.prototype.edgeHasFace = function(edge) {
+MBCanvas.prototype.edgeHasFace = function(edge) {
     return this.edgeToFaceMap.has(this.edgeToString(edge));
 }
 
-Canvas.prototype.storeFaceForEdge = function(edge, face) {
+MBCanvas.prototype.storeFaceForEdge = function(edge, face) {
     if (this.edgeHasFace(edge)){
         throw this.RestrictiveAssumption(
             'attempt to assign face to edge twice'
@@ -73,17 +73,17 @@ Canvas.prototype.storeFaceForEdge = function(edge, face) {
     return this.edgeToFaceMap.set(this.edgeToString(edge), face);
 }
 
-Canvas.prototype.edgeToFace = function(edge) {
+MBCanvas.prototype.edgeToFace = function(edge) {
     return this.edgeToFaceMap.has(this.edgeToString(edge));
 }
 
 function RestrictiveAssumption(msg){
     this.message = msg;
-    this.name = 'Canvas Restrictive Assumption';
+    this.name = 'MBCanvas Restrictive Assumption';
     this.stack = (new Error()).stack;
 }
 RestrictiveAssumption.prototype = Object.create(Error.prototype);
 RestrictiveAssumption.prototype.constructor = RestrictiveAssumption;
-Canvas.prototype.RestrictiveAssumption = RestrictiveAssumption;
+MBCanvas.prototype.RestrictiveAssumption = RestrictiveAssumption;
 
-export default Canvas;
+export default MBCanvas;

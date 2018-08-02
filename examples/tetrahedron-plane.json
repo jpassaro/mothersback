@@ -1,0 +1,142 @@
+{
+    "input": [
+        {
+            "name": "center",
+            "edges": [
+                "north",
+                "southeast",
+                "southwest"
+            ]
+        },
+        {
+            "name": "up",
+            "edges": [
+                "northeast",
+                "north",
+                "northwest"
+            ]
+        },
+        {
+            "name": "right",
+            "edges": [
+                "south",
+                "southeast",
+                "northeast"
+            ]
+        },
+        {
+            "name": "left",
+            "edges": [
+                "northwest",
+                "southwest",
+                "south"
+            ]
+        }
+    ],
+    "output": {
+        "edges": [
+            {
+                "name": "north",
+                "start": "center",
+                "end": "up"
+            },
+            {
+                "name": "northwest",
+                "start": "up",
+                "end": "left"
+            },
+            {
+                "name": "northeast",
+                "start": "up",
+                "end": "right"
+            },
+            {
+                "name": "south",
+                "start": "right",
+                "end": "left"
+            },
+            {
+                "name": "southwest",
+                "start": "center",
+                "end": "left"
+            },
+            {
+                "name": "southeast",
+                "start": "center",
+                "end": "right"
+            }
+        ],
+        "vertices": [
+            {
+                "name": "center",
+                "edges": ["north", "southeast", "southwest"],
+                "faces": [0, 1, 2]
+            },
+            {
+                "name": "up",
+                "edges": ["northeast", "north", "northwest"],
+                "faces": [3, 1, 0]
+            },
+            {
+                "name": "right",
+                "edges": ["south", "southeast", "northeast"],
+                "faces": [3, 2, 1]
+            },
+            {
+                "name": "left",
+                "edges": ["northwest", "southwest", "south"],
+                "faces": [3, 0, 2]
+            }
+        ],
+        "faces": [
+            {
+                "vertices": ["center", "up", "left"],
+                "edges": ["north", "northwest", "southwest"]
+            },
+            {
+                "vertices": ["center", "right", "up"],
+                "edges": ["southeast", "northeast", "north"]
+            },
+            {
+                "vertices": ["center", "left", "right"],
+                "edges": ["southwest", "south", "southeast"]
+            },
+            {
+                "vertices": ["up", "right", "left"],
+                "edges": ["northeast", "south", "northwest"]
+            }
+        ],
+        "paths": [
+            "start": {
+                "type": "face",
+                "id": 0
+            },
+            "next": {
+                "type": "edge",
+                "id": "southwest"
+            },
+            "nodes": [
+                {
+                    "type": "face",
+                    "id": 0
+                },
+                {
+                    "type": "edge",
+                    "id": "southwest"
+                },
+                {
+                    "type": "face",
+                    "id": 2
+                },
+                {
+                    "type": "vertex",
+                    "id": "right"
+                },
+                {
+                    "type": "edge",
+                    "id": "northeast"
+                }
+            ]
+        ]
+    }
+}
