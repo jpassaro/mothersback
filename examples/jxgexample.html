@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script type="text/javascript"
+                charset="UTF-8"
+                src="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.99.7/jsxgraphcore.js">
+        </script>
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.99.7/jsxgraph.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+        <script src="jxgexample.js" type="text/javascript"></script>
+        <link href="jxgexample.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="box" class="jxgbox"></div>
+        <input type="checkbox" id="selectPoint">
+        <label for="selectPoint">Draw segment</label>
+        <h1>Notes</h1>
+        <ul id="notes"></ul>
+        <h1>To Do</h1>
+        <ul>
+            <li>Create immutable "state" structure from which a canvas can be
+                drawn (i.e. points with label, coordinates, and sorted neighbor
+                list)</li>
+            <li>Functions to {add,delete} {point,segment}, split segment into
+                two at given point, all while preserving neighbor list
+                ordering</li>
+            <li>Function to clear/draw a state on a JXG Board</li>
+            <li>Undo/redo on JXG board</li>
+            <li>Map state-manipulation functions to UI</li>
+        </ul>
+    </body>
+</html>
