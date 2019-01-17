@@ -1,10 +1,10 @@
 import {List, Map} from "immutable";
 
-class StatePoint {
-    readonly data: any; // JXG.Point
-    readonly label: string;
-    readonly x: number;
-    readonly y: number;
+export class StatePoint {
+    public readonly data: any; // JXG.Point
+    public readonly label: string;
+    public readonly x: number;
+    public readonly y: number;
 
     constructor(kwargs: {
         data?: any,
@@ -18,17 +18,17 @@ class StatePoint {
         this.y = kwargs.y;
     }
 
-    makeNeighbor(newNeighbor: StatePoint) {
+    public makeNeighbor(newNeighbor: StatePoint) {
         return new Neighbor(
             newNeighbor.label,
-            Math.atan2(this.y - newNeighbor.y, this.x - newNeighbor.x)
+            Math.atan2(this.y - newNeighbor.y, this.x - newNeighbor.x),
         );
     }
 }
 
 class Neighbor {
-    readonly label: string;
-    readonly angle: number;
+    public readonly label: string;
+    public readonly angle: number;
     constructor(label: string, angle: number) {
         this.label = label;
         this.angle = angle;
@@ -36,40 +36,54 @@ class Neighbor {
 }
 
 export class State {
-    readonly points: Map<string, StatePoint>;
+    public readonly points: Map<string, StatePoint>;
     private readonly _adjacencies: Map<string, List<Neighbor>>;
 
-    constructor(
+    public constructor(
         points?: Map<string, StatePoint>,
-        adjacencies?: Map<string, List<Neighbor>>
+        adjacencies?: Map<string, List<Neighbor>>,
     ) {
         this.points = points || Map();
         this._adjacencies = adjacencies || Map();
     }
 
-    withPoint(label: string, coords: [number, number]) {
+    public withPoint(label: string, coords: [number, number]) {
         if (this.points.has(label)) {
-            throw Error('Cannot add label ' + label + ', you must remove it first');
+            throw Error("Cannot add label '" + label + "' as it is already present");
         }
-        let pt = new StatePoint({label, x: coords[0], y: coords[1]});
+        const pt = new StatePoint({label, x: coords[0], y: coords[1]});
         return new State(this.points.set(label, pt));
     }
-    withoutPoint(label: string) {
+
+    public withoutPoint(label: string) {
         if (!this.points.has(label)) {
             return this;
         }
         return new State(this.points.remove(label));
     }
-    withSegment(start: string, end: string) {
-        return this; // TODO stub
-    }
-    withoutSegment(start: string, end: string) {
+
+    public withSegment(start: string, end: string) {
         return this; // TODO stub
     }
 
-    *listSegments(): IterableIterator<[string, string]>{
+    public withoutSegment(start: string, end: string) {
+        return this; // TODO stub
     }
-    *generateFaces(): IterableIterator<string[]> {
+
+    public areNeighbors(x: string, y: string): boolean {
+        return !! this.findNeighbor(x, y);
+    }
+
+    public *listSegments(): IterableIterator<[string, string]> {
         // TODO stub
+    }
+
+    public *generateFaces(): IterableIterator<string[]> {
+        // TODO stub
+    }
+
+    private findNeighbor(x: string, y: string, skipCheck?: any): Neighbor {
+        return  this._adjacencies.get(x, List())
+            .filter((nbr) => nbr.label === y).first(null);
     }
 }
