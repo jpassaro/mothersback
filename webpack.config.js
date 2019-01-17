@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     entry: {
-        jxg_poc: 'jxg_poc.js'
+        jxg_poc: './jxg_poc.ts'
     },
     module: {
         rules: [
