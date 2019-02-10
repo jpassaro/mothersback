@@ -1,0 +1,14 @@
+extends:
+    - "tslint:recommended"
+defaultSeverity: "error"
+rules:
+    only-arrow-functions: false
+    variable-name:
+        - true
+        - ban-keywords
+        - check-format
+        - allow-leading-underscore
+    interface-name: false
+    one-line: false
+jsRules: []
+rulesDirectory: []

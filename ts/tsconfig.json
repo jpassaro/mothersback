@@ -4,9 +4,11 @@
         "moduleResolution": "Node"
     },
     "include": [
-        "src/**/*"
+        "**/*.ts"
     ],
     "exclude": [
         "**/*.spec.ts"
+        , "**/_*.ts"
     ]
+    , "outdir": "build"
 }
