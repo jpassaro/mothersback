@@ -30,7 +30,7 @@ make_file less style <<EOF
 EOF
 
 make_file ts script <<EOF
-import base from "./_base";
+import "./_base";
 EOF
 
 [[ -n "$made_file" ]] || {

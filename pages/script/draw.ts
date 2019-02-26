@@ -1,1 +1,1 @@
-import base from "./_base";
+import "./_base";
