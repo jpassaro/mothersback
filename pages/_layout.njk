@@ -21,14 +21,15 @@
                 </ul>
             </nav>
         </header>
-        <div id="main" class="main">
+        <main class="main">
             {% block main %}
                 This page has not been defined yet
             {% endblock %}
-        </div>
+        </main>
         <footer>
             Copyright &copy; 2018-{{ currentYear }} John Passaro
             {% include "_license.njk" %}
+            <a href="https://github.com/jpassaro/mothersback">Source code</a>
         </footer>
     </body>
 </html>
